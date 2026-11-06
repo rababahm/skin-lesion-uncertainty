@@ -42,6 +42,10 @@ diagnostic categories, derived from the HAM10000 dataset. Licence CC BY-NC 4.0
 (non-commercial). Not for clinical use. The images are downloaded by the `medmnist`
 package and never committed.
 
+![Training images per class](reports/figures/class_counts.png)
+
+![Example training images for each class](reports/figures/examples.png)
+
 Please cite:
 
 - Yang et al., "MedMNIST v2: A large-scale lightweight benchmark for 2D and 3D

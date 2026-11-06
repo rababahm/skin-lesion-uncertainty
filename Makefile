@@ -28,3 +28,6 @@ reproduce: setup data train eval
 .PHONY: baselines
 baselines:
 	uv run python -m skin_lesion_uncertainty.baselines
+
+figures:
+	uv run python -m skin_lesion_uncertainty.figures
