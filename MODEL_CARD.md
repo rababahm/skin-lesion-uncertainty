@@ -1,4 +1,4 @@
-# Model card: MODEL_NAME
+# Model card: skin-lesion-uncertainty
 
 ## Model details
 

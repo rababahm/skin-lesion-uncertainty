@@ -1,6 +1,6 @@
-# Project title
+# A skin-lesion classifier that knows when to say "I don't know"
 
-![CI](https://github.com/rababahm/REPO_NAME/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/rababahm/skin-lesion-uncertainty/actions/workflows/ci.yml/badge.svg)
 
 **Result:** one sentence with the main number and its 95% interval.
 
@@ -8,7 +8,8 @@
 
 ## The question
 
-One or two sentences: what this project measures, and why it matters.
+Can a small image classifier give probabilities you can trust, and prediction sets
+that contain the true diagnosis 90% of the time, even for rare classes?
 
 ## What this shows
 
@@ -18,8 +19,8 @@ One or two sentences: what this project measures, and why it matters.
 ## How to run
 
 ```bash
-git clone git@github.com:rababahm/REPO_NAME.git
-cd REPO_NAME
+git clone git@github.com:rababahm/skin-lesion-uncertainty.git
+cd skin-lesion-uncertainty
 make reproduce
 ```
 
@@ -27,7 +28,18 @@ Runs on a laptop CPU. Seeds are fixed.
 
 ## Data
 
-Source, licence and citation. Data is downloaded by `make data` and never committed.
+DermaMNIST, part of [MedMNIST](https://medmnist.com/): dermatoscope images in seven
+diagnostic categories, derived from the HAM10000 dataset. Licence CC BY-NC 4.0
+(non-commercial). Not for clinical use. The images are downloaded by the `medmnist`
+package and never committed.
+
+Please cite:
+
+- Yang et al., "MedMNIST v2: A large-scale lightweight benchmark for 2D and 3D
+  biomedical image classification", Scientific Data, 2023.
+- Tschandl, Rosendahl and Kittler, "The HAM10000 dataset, a large collection of
+  multi-source dermatoscopic images of common pigmented skin lesions", Scientific
+  Data, 2018.
 
 ## Licence
 

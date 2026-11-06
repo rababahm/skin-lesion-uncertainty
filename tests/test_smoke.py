@@ -1,5 +1,5 @@
-import project_name
+import skin_lesion_uncertainty
 
 
 def test_package_imports():
-    assert project_name.__name__ == "project_name"
+    assert skin_lesion_uncertainty.__name__ == "skin_lesion_uncertainty"

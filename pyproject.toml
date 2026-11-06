@@ -1,7 +1,7 @@
 [project]
-name = "project-name"
+name = "skin-lesion-uncertainty"
 version = "0.1.0"
-description = "Add your description here"
+description = "Skin-lesion classifier that knows when to say 'I don't know': calibration and conformal prediction on DermaMNIST"
 readme = "README.md"
 authors = [
     { name = "Mohammad Rababah", email = "119531086+rababahm@users.noreply.github.com" }
@@ -9,8 +9,6 @@ authors = [
 requires-python = ">=3.12"
 dependencies = []
 
-[project.scripts]
-project-name = "project_name:main"
 
 [build-system]
 requires = ["uv_build>=0.13.6,<0.14.0"]
