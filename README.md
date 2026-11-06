@@ -4,17 +4,26 @@
 
 **Result:** one sentence with the main number and its 95% interval.
 
-![Main figure](reports/figures/main.png)
+<!-- ![Main figure](reports/figures/main.png) -->
 
 ## The question
 
 Can a small image classifier give probabilities you can trust, and prediction sets
 that contain the true diagnosis 90% of the time, even for rare classes?
 
-## What this shows
+## Baselines (validation split, 28 × 28 pixels)
 
-- What the result means.
-- What it does not show (limits, assumptions).
+Stratified 5-fold cross-validation on the training split (mean ± standard deviation),
+then one score on the validation split. Class weights are balanced in all models.
+
+| Model | CV balanced accuracy | CV macro-F1 | Val balanced accuracy | Val macro-F1 |
+| --- | --- | --- | --- | --- |
+| Majority class | 0.143 ± 0.000 | 0.115 ± 0.000 | 0.143 | 0.115 |
+| Logistic regression (C = 0.1) | 0.414 ± 0.032 | 0.338 ± 0.021 | 0.429 | 0.324 |
+| Gradient boosting | 0.343 ± 0.021 | 0.376 ± 0.025 | 0.373 | 0.407 |
+
+Logistic regression leads on balanced accuracy (it catches more of the rare classes);
+gradient boosting leads on macro-F1 (fewer false alarms). Reproduce with `make baselines`.
 
 ## How to run
 
