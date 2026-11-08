@@ -1,4 +1,5 @@
 import torch
+
 from skin_lesion_uncertainty.model import SmallCNN
 
 
