@@ -18,7 +18,7 @@ data:
 	@echo "TODO: download and prepare data"
 
 train:
-	@echo "TODO: train models"
+	uv run python -m skin_lesion_uncertainty.train
 
 eval:
 	@echo "TODO: evaluate models"
