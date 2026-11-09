@@ -25,6 +25,54 @@ then one score on the validation split. Class weights are balanced in all models
 Logistic regression leads on balanced accuracy (it catches more of the rare classes);
 gradient boosting leads on macro-F1 (fewer false alarms). Reproduce with `make baselines`.
 
+## CNN (validation split, 28 × 28 pixels)
+
+A small convolutional network (41,351 parameters), trained with Adam and early stopping
+on validation balanced accuracy (patience 5). Three seeds per setting, mean ± standard
+deviation.
+
+| Model | Val balanced accuracy |
+| --- | --- |
+| CNN, class weights on | 0.542 ± 0.047 |
+| CNN, class weights off | 0.413 ± 0.016 |
+| Logistic regression (baseline above) | 0.429 |
+
+Class weights are what make the CNN beat the baseline: without them it predicts the
+common class too often. Each run's score is its best epoch, chosen on validation, so
+these numbers are optimistic; the test split is used once, at the end.
+
+Reproduce: run `uv run python -m skin_lesion_uncertainty.train --seed S` for seeds 0 to 2,
+with and without `--no-class-weights`, then `uv run python -m skin_lesion_uncertainty.report`.
+
+## Calibration (validation split)
+
+Top-label calibration: confidence is the largest predicted probability. ECE uses 15
+equal-width bins. Temperature scaling fits one parameter T by minimising the negative
+log-likelihood (NLL); it changes the probabilities but never the predicted class.
+
+| Model | Balanced acc. | T | ECE before | ECE after | NLL before | NLL after |
+| --- | --- | --- | --- | --- | --- | --- |
+| Class weights on | 0.587 | 1.24 | 0.083 | 0.054 | 1.029 | 1.013 |
+| Class weights off | 0.431 | 0.89 | 0.046 | 0.031 | 0.710 | 0.707 |
+
+Seed 0 shown. Over three seeds, validation balanced accuracy is 0.542 ± 0.047 with class
+weights and 0.413 ± 0.016 without. T is fitted on the validation set, so the "after"
+values are slightly optimistic.
+
+![Reliability diagram](reports/figures/reliability_validation.png)
+
+Class weights buy balanced accuracy at the cost of calibration. The weighted model is
+over-confident: at about 83% confidence it is right 64% of the time, and the fitted
+temperature is above 1 (T = 1.24). Temperature scaling lowers ECE from 0.083 to 0.054,
+but NLL barely moves, because the weights shift each class's probabilities by a different
+factor and a single temperature cannot undo that. The unweighted model is already close
+to calibrated. With 1,003 validation images, even a perfectly calibrated model would show
+an ECE of about 0.03 (simulated), so differences below about 0.05 are within noise.
+
+Reproduce: train seed 0 with `--save-logits artifacts/cw_on_seed0` (and with
+`--no-class-weights --save-logits artifacts/cw_off_seed0`), then
+`uv run python -m skin_lesion_uncertainty.calibration`.
+
 ## How to run
 
 ```bash
