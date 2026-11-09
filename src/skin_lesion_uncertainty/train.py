@@ -5,6 +5,7 @@ Every run is logged to MLflow: the settings, the metrics after each epoch, and t
 Run with:
     make train
     uv run python -m skin_lesion_uncertainty.train --lr 3e-4 --no-class-weights
+    uv run python -m skin_lesion_uncertainty.train --save-logits artifacts/cw_on_seed0
 
 Compare runs in the browser with:
     uv run mlflow ui --backend-store-uri sqlite:///mlflow.db
@@ -15,11 +16,13 @@ import time
 from pathlib import Path
 
 import mlflow
+import numpy as np
 import torch
 from sklearn.metrics import balanced_accuracy_score, f1_score
 from torch import nn
 
 from skin_lesion_uncertainty.data import class_weights, make_loaders
+from skin_lesion_uncertainty.evaluate import collect_logits
 from skin_lesion_uncertainty.model import SmallCNN
 
 MODEL_DIR = Path("models")  # *.pt files are ignored by Git
@@ -40,6 +43,12 @@ def parse_args() -> argparse.Namespace:
         dest="class_weights",
         action="store_false",
         help="use an unweighted loss, for comparison",
+    )
+    parser.add_argument(
+        "--save-logits",
+        type=Path,
+        default=None,
+        help="folder for the best model's validation logits and labels",
     )
     return parser.parse_args()
 
@@ -134,6 +143,15 @@ def main() -> None:
         torch.save(best_state, model_path)
         mlflow.log_artifact(str(model_path))
         mlflow.log_metrics({"best_epoch": best_epoch, "best_val_balanced_accuracy": best_score})
+
+        model.load_state_dict(best_state)  # the best epoch's weights, not the last epoch's
+        if args.save_logits is not None:
+            logits, labels = collect_logits(model, loaders["val"], device)
+            args.save_logits.mkdir(parents=True, exist_ok=True)
+            np.save(args.save_logits / "val_logits.npy", logits)
+            np.save(args.save_logits / "val_labels.npy", labels)
+            print(f"Saved validation logits {logits.shape} to {args.save_logits}")
+
         print(f"\nBest validation balanced accuracy {best_score:.3f} at epoch {best_epoch}")
         print(f"Saved {model_path}; target to beat (logistic regression): 0.429")
 
