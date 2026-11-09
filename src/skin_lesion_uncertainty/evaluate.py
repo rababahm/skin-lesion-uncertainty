@@ -2,7 +2,8 @@
 
 import numpy as np
 import torch
-from scipy.special import softmax
+from scipy.optimize import minimize_scalar
+from scipy.special import log_softmax, softmax
 from torch import nn
 from torch.utils.data import DataLoader
 
@@ -80,3 +81,21 @@ def expected_calibration_error(
     return float(
         np.sum((counts[nonempty] / n) * np.abs(accuracy[nonempty] - mean_confidence[nonempty]))
     )
+
+
+def fit_temperature(logits: np.ndarray, labels: np.ndarray) -> float:
+    """Temperature T > 0 minimising the NLL of softmax(logits / T)."""
+    logits = logits.astype(np.float64)
+    row_indices = np.arange(len(labels))
+
+    def mean_nll(log_temperature: float) -> float:
+        temperature = np.exp(log_temperature)
+        log_probs = log_softmax(logits / temperature, axis=1)
+        return float(-log_probs[row_indices, labels].mean())
+
+    result = minimize_scalar(
+        mean_nll,
+        method="bounded",
+        bounds=(-3, 3),
+    )
+    return float(np.exp(result.x))
