@@ -55,9 +55,16 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="folder for the best model's validation logits and labels",
     )
+    parser.add_argument(
+        "--save-test-logits",
+        action="store_true",
+        help="also save test logits; only for the frozen final model",
+    )
     args = parser.parse_args()
     if args.arch == "cnn" and args.size != 28:
         parser.error("the small CNN is built for 28 x 28 images; use --size 28")
+    if args.save_test_logits and args.save_logits is None:
+        parser.error("--save-test-logits needs --save-logits FOLDER")
     return args
 
 
@@ -166,6 +173,11 @@ def main() -> None:
             np.save(args.save_logits / "val_logits.npy", logits)
             np.save(args.save_logits / "val_labels.npy", labels)
             print(f"Saved validation logits {logits.shape} to {args.save_logits}")
+            if args.save_test_logits:
+                test_logits, test_labels = collect_logits(model, loaders["test"], device)
+                np.save(args.save_logits / "test_logits.npy", test_logits)
+                np.save(args.save_logits / "test_labels.npy", test_labels)
+                print(f"Saved test logits {test_logits.shape} to {args.save_logits}")
 
         print(f"\nBest validation balanced accuracy {best_score:.3f} at epoch {best_epoch}")
         print(f"Saved {model_path}; target to beat (logistic regression): 0.429")
