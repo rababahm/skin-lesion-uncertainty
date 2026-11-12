@@ -242,6 +242,8 @@ Please cite:
 
 - Yang et al., "MedMNIST v2: A large-scale lightweight benchmark for 2D and 3D
   biomedical image classification", Scientific Data, 2023.
+- Yang, Shi and Ni, "MedMNIST Classification Decathlon: A Lightweight AutoML Benchmark
+  for Medical Image Analysis", IEEE International Symposium on Biomedical Imaging (ISBI), 2021.
 - Tschandl, Rosendahl and Kittler, "The HAM10000 dataset, a large collection of
   multi-source dermatoscopic images of common pigmented skin lesions", Scientific
   Data, 2018.
