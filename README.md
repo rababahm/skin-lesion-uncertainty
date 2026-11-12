@@ -195,7 +195,7 @@ sets under every shift, but neither holds 90%. In use, conformal sets need an in
 ## Limitations
 
 - One dataset at 64 × 64 pixels; dermatoscope frame artefacts may act as shortcuts.
-- Rare classes are small (22 dermatofibroma and 29 vascular test images), so their
+- Rare classes are small (23 dermatofibroma and 29 vascular test images), so their
   per-class numbers are noisy.
 - Not yet checked: whether MedMNIST keeps all images of the same lesion in one split. If
   not, all scores are optimistic.
