@@ -7,6 +7,7 @@ from skin_lesion_uncertainty.conformal import (
     conformal_scores,
     conformal_threshold,
     coverage_and_size,
+    partial_classwise_thresholds,
     prediction_sets,
 )
 
@@ -59,3 +60,11 @@ def test_classwise_prediction_sets():
     thresholds = np.array([0.5, 0.2])  # class 0 needs p >= 0.5, class 1 needs p >= 0.8
     expected = np.array([[True, False], [False, False]])  # Mondrian sets can be empty
     np.testing.assert_array_equal(classwise_prediction_sets(probs, thresholds), expected)
+
+
+def test_partial_classwise_thresholds():
+    rng = np.random.default_rng(0)
+    scores, labels = rng.random(200), rng.integers(0, 3, 200)
+    thresholds = partial_classwise_thresholds(scores, labels, 3, 0.1, classes=(2,))
+    assert thresholds[0] == thresholds[1] == conformal_threshold(scores, 0.1)
+    assert thresholds[2] == conformal_threshold(scores[labels == 2], 0.1)

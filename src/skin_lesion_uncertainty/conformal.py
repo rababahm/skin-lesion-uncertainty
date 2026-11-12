@@ -44,3 +44,13 @@ def classwise_thresholds(
 def classwise_prediction_sets(probs: np.ndarray, thresholds: np.ndarray) -> np.ndarray:
     """Boolean array (n, n_classes): class y is in the set if 1 - p(y) <= threshold of y."""
     return (1 - probs) <= thresholds[np.newaxis, :]
+
+
+def partial_classwise_thresholds(
+    scores: np.ndarray, labels: np.ndarray, n_classes: int, alpha: float, classes: tuple[int, ...]
+) -> np.ndarray:
+    """Per-class thresholds for the listed classes; the standard threshold for all others."""
+    thresholds = np.full(n_classes, conformal_threshold(scores, alpha))
+    for k in classes:
+        thresholds[k] = conformal_threshold(scores[labels == k], alpha)
+    return thresholds
