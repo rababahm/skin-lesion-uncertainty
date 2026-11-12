@@ -31,3 +31,16 @@ def coverage_and_size(sets: np.ndarray, labels: np.ndarray) -> tuple[float, floa
     coverage = sets[np.arange(n), labels].mean()
     mean_size = sets.sum(axis=1).mean()
     return float(coverage), float(mean_size)
+
+
+def classwise_thresholds(
+    scores: np.ndarray, labels: np.ndarray, n_classes: int, alpha: float
+) -> np.ndarray:
+    """One threshold per class, from the calibration images of that class (Mondrian)."""
+    # A class with too few calibration images gets an infinite threshold: always included.
+    return np.array([conformal_threshold(scores[labels == k], alpha) for k in range(n_classes)])
+
+
+def classwise_prediction_sets(probs: np.ndarray, thresholds: np.ndarray) -> np.ndarray:
+    """Boolean array (n, n_classes): class y is in the set if 1 - p(y) <= threshold of y."""
+    return (1 - probs) <= thresholds[np.newaxis, :]

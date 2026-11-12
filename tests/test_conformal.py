@@ -2,6 +2,8 @@ import numpy as np
 import pytest
 
 from skin_lesion_uncertainty.conformal import (
+    classwise_prediction_sets,
+    classwise_thresholds,
     conformal_scores,
     conformal_threshold,
     coverage_and_size,
@@ -42,3 +44,18 @@ def test_coverage_and_size():
     coverage, size = coverage_and_size(sets, labels)
     assert coverage == pytest.approx(2 / 3)
     assert size == pytest.approx(4 / 3)
+
+
+def test_classwise_thresholds():
+    scores = np.r_[np.arange(1, 10) / 10, np.arange(1, 9) / 10]  # 9 of class 0, 8 of class 1
+    labels = np.r_[np.zeros(9, dtype=int), np.ones(8, dtype=int)]
+    thresholds = classwise_thresholds(scores, labels, n_classes=2, alpha=0.1)
+    assert thresholds[0] == pytest.approx(0.9)
+    assert np.isinf(thresholds[1])  # 8 images are too few for 90%
+
+
+def test_classwise_prediction_sets():
+    probs = np.array([[0.6, 0.4], [0.3, 0.7]])
+    thresholds = np.array([0.5, 0.2])  # class 0 needs p >= 0.5, class 1 needs p >= 0.8
+    expected = np.array([[True, False], [False, False]])  # Mondrian sets can be empty
+    np.testing.assert_array_equal(classwise_prediction_sets(probs, thresholds), expected)
