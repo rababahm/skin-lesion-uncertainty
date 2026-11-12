@@ -197,8 +197,10 @@ sets under every shift, but neither holds 90%. In use, conformal sets need an in
 - One dataset at 64 × 64 pixels; dermatoscope frame artefacts may act as shortcuts.
 - Rare classes are small (23 dermatofibroma and 29 vascular test images), so their
   per-class numbers are noisy.
-- Not yet checked: whether MedMNIST keeps all images of the same lesion in one split. If
-  not, all scores are optimistic.
+- The official DermaMNIST splits put images of the same lesion in more than one split
+  (Abhishek, Jain and Hamarneh, 2024), so all scores here are likely optimistic. Their
+  corrected version, DermaMNIST-C, keeps each lesion in one split; re-running on it is
+  the next step.
 - The benign grouping behind the referral rule is a modelling assumption.
 - **Not for clinical use.** See [MODEL_CARD.md](MODEL_CARD.md).
 
@@ -243,6 +245,8 @@ Please cite:
 - Tschandl, Rosendahl and Kittler, "The HAM10000 dataset, a large collection of
   multi-source dermatoscopic images of common pigmented skin lesions", Scientific
   Data, 2018.
+- Abhishek, Jain and Hamarneh, "Investigating the Quality of DermaMNIST and Fitzpatrick17k
+  Dermatological Image Datasets", arXiv:2401.14497, 2024.
 
 ## Licence
 

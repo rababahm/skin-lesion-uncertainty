@@ -82,13 +82,16 @@ mel 0.90, nv 0.96, vasc 0.97.
 - **Rare classes are small:** 23 dermatofibroma and 29 vascular test images, so their
   per-class numbers are noisy. Full per-class (Mondrian) sets need at least 9
   calibration images per class at alpha = 0.10.
-- **Possible optimism from the split:** not yet checked whether MedMNIST keeps all images
-  of the same lesion in one split. If not, every score here is optimistic.
+- **Optimism from the split:** the official DermaMNIST splits put images of the same
+  lesion in more than one split (Abhishek, Jain and Hamarneh, 2024), so the model may
+  have seen other images of some test lesions during training, and every score here is
+  likely optimistic. DermaMNIST-C, their corrected version, keeps each lesion in one
+  split; re-running on it is the next step.
 - **Shortcuts:** dermatoscope frame artefacts and image borders may act as shortcuts.
   Not tested.
-- **Population:** HAM10000 comes from a limited number of clinical sources and, as is
-  widely reported, contains mostly lighter skin types. Performance on other populations
-  is unknown.
+- **Population:** HAM10000 comes from two clinical sites, in Austria and Australia, and,
+  as is widely reported, contains mostly lighter skin types. Performance on other
+  populations is unknown.
 - **Resolution:** 64 × 64 pixels discards detail a dermatologist would use.
 - **Benign grouping:** which classes count as benign for the referral rule is a
   modelling assumption, not medical advice.
@@ -105,3 +108,5 @@ See the README for details and run times.
 - Tschandl, Rosendahl and Kittler, "The HAM10000 dataset, a large collection of
   multi-source dermatoscopic images of common pigmented skin lesions", Scientific
   Data, 2018.
+- Abhishek, Jain and Hamarneh, "Investigating the Quality of DermaMNIST and Fitzpatrick17k
+  Dermatological Image Datasets", arXiv:2401.14497, 2024.
