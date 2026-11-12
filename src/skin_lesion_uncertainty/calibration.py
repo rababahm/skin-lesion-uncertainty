@@ -1,6 +1,6 @@
 """Temperature scaling and reliability diagrams for the saved validation logits.
 
-Needs the logits from train.py --save-logits (cw_on_seed0 and cw_off_seed0).
+Needs the logits from train.py --save-logits (resnet_cw_on_seed0, cw_on_seed0, cw_off_seed0).
 
 Run from the repository root:
     uv run python -m skin_lesion_uncertainty.calibration
@@ -22,7 +22,11 @@ from skin_lesion_uncertainty.evaluate import (
 
 ARTIFACTS = Path("artifacts")  # ignored by Git
 FIGURE = Path("reports/figures/reliability_validation.png")
-MODELS = {"Class weights on": "cw_on_seed0", "Class weights off": "cw_off_seed0"}
+MODELS = {
+    "ResNet-18, 64 px": "resnet_cw_on_seed0",
+    "CNN, class weights on": "cw_on_seed0",
+    "CNN, class weights off": "cw_off_seed0",
+}
 HEADER = ["Model", "Balanced acc.", "T", "ECE before", "ECE after", "NLL before", "NLL after"]
 
 
@@ -41,7 +45,7 @@ def plot_reliability(ax, logits, labels, label, style) -> None:
 
 
 def main() -> None:
-    fig, axes = plt.subplots(1, len(MODELS), figsize=(10, 4.5), sharey=True)
+    fig, axes = plt.subplots(1, len(MODELS), figsize=(15, 4.5), sharey=True)
     print("| " + " | ".join(HEADER) + " |")
     print("|" + " --- |" * len(HEADER))
 
